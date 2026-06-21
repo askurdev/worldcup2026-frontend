@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600&display=swap");
+@import "tailwindcss";
+
+:root {
+  /* ---- Core palette (named, per design plan) ---- */
+  --color-pitch-night: #0a0e12; /* near-black base, evokes stadium floodlight night */
+  --color-pitch-green: #0b3d2e; /* deep pitch green, panels/cards */
+  --color-pitch-green-light: #155c43;
+  --color-fifa-gold: #d4af37; /* score highlights, primary accent */
+  --color-electric-teal: #1fc2a8; /* live indicator, secondary accent */
+  --color-off-white: #f0ede4; /* primary text on dark surfaces */
+  --color-off-white-dim: #b9b5a9;
+
+  /* ---- Semantic tokens ---- */
+  --background: var(--color-pitch-night);
+  --background-elevated: #11171c;
+  --foreground: var(--color-off-white);
+  --foreground-dim: var(--color-off-white-dim);
+  --border-subtle: #1f2730;
+  --accent-primary: var(--color-fifa-gold);
+  --accent-live: var(--color-electric-teal);
+  --card-bg: var(--color-pitch-green);
+
+  /* ---- Typography ---- */
+  --font-display: "Archivo Black", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-data: "Roboto Mono", monospace; /* tabular nums for scores/timers */
+
+  --radius-card: 0.75rem;
+}
+
+/* Light theme overrides — applied via .light class on <html>.
+   Same hue family (pitch green / gold / teal) so brand identity
+   holds, but inverted for light-surface legibility. */
+.light {
+  --background: #f7f5f0;
+  --background-elevated: #ffffff;
+  --foreground: #14201b;
+  --foreground-dim: #5b6b62;
+  --border-subtle: #e3e0d6;
+  --card-bg: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-data);
+}
+
+* {
+  border-color: var(--border-subtle);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+}
+
+/* Tabular numerals everywhere a score or countdown renders, so
+   digits never jitter in width as they change. */
+.font-data {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Visible keyboard focus ring on every interactive element —
+   accessibility floor from the frontend-design skill. */
+:focus-visible {
+  outline: 2px solid var(--color-electric-teal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbar for the bracket's horizontal scroll region */
+.bracket-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+.bracket-scroll::-webkit-scrollbar-track {
+  background: var(--background-elevated);
+}
+.bracket-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-pitch-green-light);
+  border-radius: 4px;
+}

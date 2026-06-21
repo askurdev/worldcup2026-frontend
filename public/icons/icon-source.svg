@@ -1,0 +1,16 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#0b3d2e"/>
+  <!-- subtle pitch-line grid for texture -->
+  <g stroke="#1fc2a8" stroke-opacity="0.18" stroke-width="3">
+    <line x1="0" y1="256" x2="512" y2="256"/>
+    <circle cx="256" cy="256" r="90" fill="none"/>
+  </g>
+  <!-- simplified ball motif -->
+  <g transform="translate(256,210)">
+    <circle r="92" fill="#f0ede4"/>
+    <path d="M0 -92 L27 -52 L88 -28 L60 28 L0 92 L-60 28 L-88 -28 L-27 -52 Z" fill="#0b3d2e" opacity="0.9"/>
+    <circle r="30" fill="#0b3d2e"/>
+  </g>
+  <!-- wordmark -->
+  <text x="256" y="430" font-family="Arial, sans-serif" font-weight="900" font-size="84" fill="#d4af37" text-anchor="middle" letter-spacing="2">WC26</text>
+</svg>
