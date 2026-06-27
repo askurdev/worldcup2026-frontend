@@ -1,20 +1,19 @@
 import type { FootballDataProvider } from "./football-data-provider";
 import { MockFootballDataProvider } from "./mock-football-data-provider";
+import { BackendApiProvider } from "./backend-api-provider";
 
 let cachedProvider: FootballDataProvider | null = null;
 
 export function getProvider(): FootballDataProvider {
   if (cachedProvider) return cachedProvider;
-
   if (process.env.NEXT_PUBLIC_API_URL) {
-    const { BackendApiProvider } = require("./backend-api-provider");
     cachedProvider = new BackendApiProvider();
   } else {
     cachedProvider = new MockFootballDataProvider();
   }
-
-  return cachedProvider!
+  return cachedProvider as FootballDataProvider;
 }
+
 
 // import type { FootballDataProvider } from "./football-data-provider";
 // import { MockFootballDataProvider } from "./mock-football-data-provider";
