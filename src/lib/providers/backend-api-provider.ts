@@ -79,6 +79,7 @@ export class BackendApiProvider implements FootballDataProvider {
     return apiFetch<SearchResult>("/search", { q: query });
   }
 }
+export default BackendApiProvider;
 
 
 
@@ -86,6 +87,10 @@ export class BackendApiProvider implements FootballDataProvider {
 
 
 // /**
+
+
+
+
 //  * BackendApiProvider
 //  * ------------------
 //  * Calls our FastAPI backend at NEXT_PUBLIC_API_URL.
