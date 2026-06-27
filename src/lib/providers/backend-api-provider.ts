@@ -1,40 +1,84 @@
+import type { FootballDataProvider, MatchListParams, TeamListParams, PlayerListParams } from "./football-data-provider";
+import type { Bracket, Group, Match, MatchDetail, PaginatedResponse, Player, SearchResult, Team, TeamDetail } from "@/lib/types";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+
 function snakeToCamel(key: string) {
   return key.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
 }
 
 function camelize(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(camelize);
-
   if (value && typeof value === "object") {
     return Object.fromEntries(
       Object.entries(value).map(([key, val]) => [snakeToCamel(key), camelize(val)])
     );
   }
-
   return value;
 }
 
-async function apiFetch<T>(
-  path: string,
-  params?: Record<string, string | number | undefined>
-): Promise<T> {
+async function apiFetch<T>(path: string, params?: Record<string, string | number | undefined>): Promise<T> {
   const url = new URL(`${API_BASE}/api/v1${path}`);
-
-  if (params) {
-    Object.entries(params).forEach(([k, v]) => {
-      if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
-    });
-  }
+  Object.entries(params ?? {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
+  });
 
   const res = await fetch(url.toString(), { next: { revalidate: 30 } });
   if (!res.ok) throw new Error(`API error ${res.status} on ${path}`);
-
   return camelize(await res.json()) as T;
 }
 
+export class BackendApiProvider implements FootballDataProvider {
+  readonly providerName = "backend_api";
 
+  getMatches(params: MatchListParams = {}) {
+    return apiFetch<PaginatedResponse<Match>>("/matches", params as Record<string, string | number | undefined>);
+  }
 
+  getMatchById(id: string): Promise<MatchDetail | null> {
+    return apiFetch<MatchDetail>(`/matches/${id}`).catch(() => null);
+  }
 
+  getLiveMatches() {
+    return apiFetch<Match[]>("/live");
+  }
+
+  getTodayMatches() {
+    return apiFetch<Match[]>("/live/today");
+  }
+
+  getTeams(params: TeamListParams = {}) {
+    return apiFetch<PaginatedResponse<Team>>("/teams", params as Record<string, string | number | undefined>);
+  }
+
+  getTeamBySlug(slug: string): Promise<TeamDetail | null> {
+    return apiFetch<TeamDetail>(`/teams/${slug}`).catch(() => null);
+  }
+
+  getPlayers(params: PlayerListParams = {}) {
+    return apiFetch<PaginatedResponse<Player>>("/players", params as Record<string, string | number | undefined>);
+  }
+
+  getPlayerBySlug(slug: string): Promise<Player | null> {
+    return apiFetch<Player>(`/players/${slug}`).catch(() => null);
+  }
+
+  getGroups() {
+    return apiFetch<Group[]>("/standings");
+  }
+
+  getGroupByName(name: string): Promise<Group | null> {
+    return apiFetch<Group>(`/standings/${name}`).catch(() => null);
+  }
+
+  getBracket() {
+    return apiFetch<Bracket>("/brackets");
+  }
+
+  search(query: string) {
+    return apiFetch<SearchResult>("/search", { q: query });
+  }
+}
 
 
 
